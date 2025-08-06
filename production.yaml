@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:17.5
+    environment:
+      KC_DB:
+      KC_DB_USERNAME:
+      KC_DB_PASSWORD:
+      KC_DB_URL_DATABASE:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    volumes:
+      - ./files/postgres/keycloak.sh:/docker-entrypoint-initdb.d/100-keycloak.sh:ro
+      - pg-data:/var/lib/postgresql
+
+  keycloak:
+    environment:
+      KC_DB:
+      KC_DB_USERNAME:
+      KC_DB_PASSWORD:
+      KC_DB_URL_DATABASE:
+      KC_DB_URL_HOST:
+    command:
+      - start
+      - --import-realm
+
+  graphdb:
+    volumes:
+      - graphdb-data:/opt/graphdb/home/data
+
+  elasticsearch:
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+
+volumes:
+  pg-data:
+  es-data:
+  graphdb-data:

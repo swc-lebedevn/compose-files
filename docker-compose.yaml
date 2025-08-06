@@ -1,0 +1,62 @@
+services:
+  proxy:
+    image: nginx
+    environment:
+      PROXY_CLIENT_MAX_BODY_SIZE:
+    volumes:
+      - ./files/nginx/default.conf:/etc/nginx/templates/default.conf.template
+    ports:
+      - "80:80"
+
+  keycloak:
+    image: maven.ontotext.com/gwp/poolparty-keycloak:latest
+    environment:
+      KC_PROXY_HEADERS:
+      KC_HTTP_RELATIVE_PATH:
+      KC_HOSTNAME:
+      KEYCLOAK_ADMIN:
+      KEYCLOAK_ADMIN_PASSWORD:
+      POOLPARTY_SUPER_ADMIN_PASSWORD:
+      POOLPARTY_KEYCLOAK_LOGIN_CLIENTSECRET:
+    ports:
+      - "9000:9000"
+    command:
+      - start-dev
+      - --import-realm
+
+  elasticsearch:
+    image: elasticsearch:8.17.6
+    environment:
+      discovery.type:
+      xpack.security.enabled:
+      ES_JAVA_TOOL_OPTIONS:
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    mem_limit: 10g
+
+  graphdb:
+    image: docker-registry.ontotext.com/graphdb:11.0.2
+    volumes:
+      - "${GRAPHDB_LICENSE}:/opt/graphdb/home/conf/graphdb.license:ro"
+
+  poolparty:
+    image: poolparty:10.0-SNAPSHOT
+    environment:
+      POOLPARTY_KEYCLOAK_LOGIN_REALM:
+      POOLPARTY_KEYCLOAK_ADMIN_REALM:
+      POOLPARTY_KEYCLOAK_AUTHURL:
+      POOLPARTY_KEYCLOAK_LOGIN_CLIENTID:
+      POOLPARTY_KEYCLOAK_LOGIN_CLIENTSECRET:
+      POOLPARTY_KEYCLOAK_ADMIN_CLIENTID:
+      POOLPARTY_KEYCLOAK_ADMIN_USERNAME:
+      POOLPARTY_KEYCLOAK_ADMIN_PASSWORD:
+      POOLPARTY_INDEX_TYPE: ELASTICSEARCH
+      POOLPARTY_INDEX_URL: http://elasticsearch:9200
+      POOLPARTY_GRAPHDB_URL: http://graphdb:7200
+      PP_HEAP_SIZE:
+      _POOLPARTY_ENCRYPTION_PASSWORD: "1234567890"
+    extra_hosts:
+      - "keycloak.127.0.0.1.nip.io:host-gateway"
+    volumes:
+      - "${POOLPARTY_LICENSE}:/usr/share/poolparty/config/licenses/poolparty.key:ro"
