@@ -3,6 +3,8 @@ services:
     image: nginx
     environment:
       PROXY_CLIENT_MAX_BODY_SIZE:
+      PROXY_SEND_TIMEOUT:
+      PROXY_READ_TIMEOUT:
     volumes:
       - ./files/nginx/default.conf:/etc/nginx/templates/default.conf.template
     ports:
@@ -41,7 +43,7 @@ services:
       - "${GRAPHDB_LICENSE}:/opt/graphdb/home/conf/graphdb.license:ro"
 
   poolparty:
-    image: poolparty:10.0-SNAPSHOT
+    image: maven.ontotext.com/gwp/poolparty:latest
     environment:
       POOLPARTY_KEYCLOAK_LOGIN_REALM:
       POOLPARTY_KEYCLOAK_ADMIN_REALM:
