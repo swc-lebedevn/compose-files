@@ -11,7 +11,7 @@ services:
       - "80:80"
 
   keycloak:
-    image: maven.ontotext.com/gwp/poolparty-keycloak:latest
+    image: docker-registry.ontotext.com/poolparty-keycloak:latest
     environment:
       KC_PROXY_HEADERS:
       KC_HTTP_RELATIVE_PATH:
@@ -38,12 +38,14 @@ services:
     mem_limit: 10g
 
   graphdb:
-    image: docker-registry.ontotext.com/graphdb:11.0.2
+    image: docker-registry.ontotext.com/graphdb:11.1.0-RC5
+    ports:
+      - "7200:7200"
     volumes:
       - "${GRAPHDB_LICENSE}:/opt/graphdb/home/conf/graphdb.license:ro"
 
   poolparty:
-    image: maven.ontotext.com/gwp/poolparty:latest
+    image: docker-registry.ontotext.com/poolparty:latest
     environment:
       POOLPARTY_KEYCLOAK_LOGIN_REALM:
       POOLPARTY_KEYCLOAK_ADMIN_REALM:
@@ -58,6 +60,8 @@ services:
       POOLPARTY_GRAPHDB_URL: http://graphdb:7200
       PP_HEAP_SIZE:
       _POOLPARTY_ENCRYPTION_PASSWORD: "1234567890"
+    ports:
+      - "8081:8081"
     extra_hosts:
       - "keycloak.127.0.0.1.nip.io:host-gateway"
     volumes:
