@@ -23,14 +23,6 @@ services:
       - start
       - --import-realm
 
-  graphdb:
-    volumes:
-      - graphdb-data:/opt/graphdb/home/data
-
-  elasticsearch:
-    volumes:
-      - es-data:/usr/share/elasticsearch/data
-
 volumes:
   pg-data:
   es-data:

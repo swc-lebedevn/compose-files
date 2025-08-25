@@ -22,6 +22,8 @@ services:
       POOLPARTY_KEYCLOAK_LOGIN_CLIENTSECRET:
     ports:
       - "9000:9000"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
     command:
       - start-dev
       - --import-realm
@@ -35,6 +37,8 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
     mem_limit: 10g
 
   graphdb:
@@ -43,6 +47,7 @@ services:
       - "7200:7200"
     volumes:
       - "${GRAPHDB_LICENSE}:/opt/graphdb/home/conf/graphdb.license:ro"
+      - graphdb_data:/opt/graphdb/home
 
   poolparty:
     image: docker-registry.ontotext.com/poolparty:latest
@@ -66,3 +71,10 @@ services:
       - "keycloak.127.0.0.1.nip.io:host-gateway"
     volumes:
       - "${POOLPARTY_LICENSE}:/usr/share/poolparty/config/licenses/poolparty.key:ro"
+      - poolparty_data:/usr/share/poolparty/data
+
+volumes:
+  keycloak_data:
+  graphdb_data:
+  elastic_data:
+  poolparty_data:
