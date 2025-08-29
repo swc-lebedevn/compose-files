@@ -12,8 +12,7 @@ services:
       - "80:80"
 
   keycloak:
-    # change latest-amd64 to latest-arm64 if needed
-    image: docker-registry.ontotext.com/poolparty-keycloak:latest
+    image: ontotext/poolparty-keycloak:2.1.1
     environment:
       KC_PROXY_HEADERS:
       KC_HTTP_ENABLED:
@@ -45,7 +44,7 @@ services:
     mem_limit: 10g
 
   graphdb:
-    image: docker-registry.ontotext.com/graphdb:11.1.0
+    image: ontotext/graphdb:11.1.0
     environment:
       graphdb__license__file: /etc/graphdb/graphdb.license
     ports:
@@ -56,7 +55,7 @@ services:
 
   poolparty:
     # change latest-amd64 to latest-arm64 if needed
-    image: docker-registry.ontotext.com/poolparty:latest-amd64
+    image: ontotext/poolparty:10.0.0
     environment:
       POOLPARTY_KEYCLOAK_LOGIN_REALM:
       POOLPARTY_KEYCLOAK_ADMIN_REALM:
