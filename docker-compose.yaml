@@ -25,6 +25,7 @@ services:
       POOLPARTY_KEYCLOAK_LOGIN_CLIENTSECRET:
     ports:
       - "9000:9000"
+      - "8080:8080"
     volumes:
       - keycloak_data:/opt/keycloak/data
     command:
